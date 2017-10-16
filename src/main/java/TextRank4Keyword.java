@@ -1,10 +1,19 @@
+import org.ansj.domain.Result;
+import org.ansj.domain.Term;
+import org.apache.log4j.Logger;
+
+import java.util.List;
+
 /**
  * @Description:
  * @Author: J.Y.Zhang
  * @Date: 2017/10/15
  */
+
 public class TextRank4Keyword {
+    private static Logger logger = Logger.getLogger(TextRank4Keyword.class);
     private String text;
+
     private int window = 2;
     private String[][] words_no_filter;    // 对sentences中每个句子分词而得到的两级列表
     private String[][] words_no_stopwords; // 去掉words_no_filter中的停止词而得到的两级列表
@@ -12,6 +21,9 @@ public class TextRank4Keyword {
 
     private String stop_words_file; // 指定停止词文件路径（一行一个停止词），若为其他类型，则使用默认停止词文件
     private String[] delimiters; // 符号 用来把文本拆成句子
+    private String[] keywords;
+
+    private Segmentation seg  = new Segmentation();
 
     /**
      * 无参数的构造函数
@@ -28,10 +40,16 @@ public class TextRank4Keyword {
      * @param window
      */
     public void analyse(String text,int window) {
+        //System.out.println(text+ window);
+        keywords = new String[]{"1", "2", "3"};
 
+        List<List<Term>> result = seg.segment(text=text);
+
+        logger.info(result);
     };
 
-    public void get_keywords(){
+    public String[] get_keywords(){
 
+        return keywords;
     }
 }
