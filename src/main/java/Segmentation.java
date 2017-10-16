@@ -24,7 +24,7 @@ public class Segmentation {
 
     }
 
-    public List<List<Term>> segment(String text){
+    public List<List<String>> segment(String text){
         /** 对一段文本进行分词，返回list类型的分词结果
         Keyword arguments:
         lower                  -- 是否将单词小写（针对英文）
@@ -34,8 +34,7 @@ public class Segmentation {
         String[] result = new String[] {"ss", "sss"};
         Result w = BaseAnalysis.parse(text);
         String[] sentences = SentenceSegmentation(text);
-        List<List<Term>> words = WordSegmentation(sentences);
-        logger.info(words);
+        List<List<String>> words = WordSegmentation(sentences);
 
         return words;
     }
@@ -55,30 +54,34 @@ public class Segmentation {
             logger.info(sentences[i]);
         }
         */
-
         return sentences;
     }
 
-    public List<List<Term>> WordSegmentation(String[] sentences){
+    public List<List<String>> WordSegmentation(String[] sentences){
         logger.info("WordSeg");
-        List<List<Term>> listTest = new ArrayList<List<Term>>();
+        //List<List<Term>> listTest = new ArrayList<List<Term>>();
+
+        List<List<String>> sentenceWordsList = new ArrayList<List<String>>();
         for(int i = 0; i < sentences.length; i++){
+            List<String> wordsList = new ArrayList<String>();
             StopRecognition filter = new StopRecognition();
 
-            filter.insertStopNatures("uj"); //过滤词性
-            filter.insertStopNatures("ul");
-            filter.insertStopNatures("null");
-            filter.insertStopWords(" "); //过滤单词
+            //filter.insertStopWords("我"); //过滤单词
+            //调用过滤
+            //Result modifResult = ToAnalysis.parse(sentences[i]).recognition(filter); //过滤分词结果
 
             Result result = ToAnalysis.parse(sentences[i]);
-
             List<Term> terms = result.getTerms(); //拿到terms
-            //logger.info(terms);
-            listTest.add(i, terms);
+
+            for(int j = 0; j < terms.size(); j++){
+                String word = terms.get(j).getName(); //拿到词
+                wordsList.add(word);
+            }
+            sentenceWordsList.add(i, wordsList);
 
         }
         //logger.info(listTest);
-        return listTest;
+        return sentenceWordsList;
 
 
 

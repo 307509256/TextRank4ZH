@@ -41,14 +41,26 @@ public class TextRank4Keyword {
      */
     public void analyse(String text,int window) {
         //System.out.println(text+ window);
-        keywords = new String[]{"1", "2", "3"};
+        logger.info("analyse");
+        List<List<String>> result = seg.segment(text=text);
+        for(int i = 0; i < result.size(); i++){
+            logger.info(result.get(i));
+        }
+        keywords = util.sort_words(window = window);
 
-        List<List<Term>> result = seg.segment(text=text);
 
-        logger.info(result);
+
     };
 
-    public String[] get_keywords(){
+    /**
+     *
+     * @param num
+     * @param word_min_len
+     * @return
+     */
+    public String[] get_keywords(int num, int word_min_len){
+        String[] result;
+        int count = 0;
 
         return keywords;
     }

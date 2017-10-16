@@ -20,7 +20,10 @@ public class util {
 
     }
 
-    public void sort_words(){
 
+
+    public static String[] sort_words(int i) {
+        String[] sort_words = {};
+        return sort_words;
     }
 }
