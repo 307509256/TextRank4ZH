@@ -17,11 +17,20 @@ import java.util.regex.Pattern;
  */
 public class Segmentation {
     private static Logger logger = Logger.getLogger(Segmentation.class);
-    private String text;
+    private List<List<String>> resultText;
+    private String[] resultSentences;
     private boolean lower = true, use_stop_words = true, use_speech_tags_filter = true;
 
     public Segmentation() {
 
+    }
+
+    public List<List<String>> getResultText() {
+        return resultText;
+    }
+
+    public String[] getResultSentences() {
+        return resultSentences;
     }
 
     public List<List<String>> segment(String text){
@@ -35,7 +44,7 @@ public class Segmentation {
         Result w = BaseAnalysis.parse(text);
         String[] sentences = SentenceSegmentation(text);
         List<List<String>> words = WordSegmentation(sentences);
-
+        this.resultText = words;
         return words;
     }
 
@@ -54,6 +63,7 @@ public class Segmentation {
             logger.info(sentences[i]);
         }
         */
+        this.resultSentences = sentences;
         return sentences;
     }
 

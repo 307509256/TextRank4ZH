@@ -11,10 +11,11 @@ import java.util.List;
  */
 
 public class TextRank4Keyword {
-    private static Logger logger = Logger.getLogger(TextRank4Keyword.class);
+    private  Logger logger = Logger.getLogger(TextRank4Keyword.class);
     private String text;
 
     private int window = 2;
+
     private String[][] words_no_filter;    // 对sentences中每个句子分词而得到的两级列表
     private String[][] words_no_stopwords; // 去掉words_no_filter中的停止词而得到的两级列表
     private String[][] words_all_filters;  // 保留words_no_stop_words中指定词性的单词而得到的两级列表
@@ -42,11 +43,18 @@ public class TextRank4Keyword {
     public void analyse(String text,int window) {
         //System.out.println(text+ window);
         logger.info("analyse");
-        List<List<String>> result = seg.segment(text=text);
-        for(int i = 0; i < result.size(); i++){
-            logger.info(result.get(i));
+
+        seg.segment(text=text);
+        List<List<String>> resultWords = seg.getResultText();
+        String[] resultSentences = seg.getResultSentences();
+
+        for(int i = 0; i < resultWords.size(); i++){
+            logger.info(resultWords.get(i));
         }
-        keywords = util.sort_words(window = window);
+        List<List<String>> vertex_source = resultWords;
+        List<List<String>> edge_source   = resultWords;
+
+        keywords = util.sort_words(vertex_source, edge_source, window);
 
 
 
