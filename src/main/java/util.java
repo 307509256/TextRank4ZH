@@ -1,5 +1,10 @@
 import java.util.*;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.floorDiv;
+import static java.lang.Math.max;
+import static java.lang.System.out;
+
 /**
  * @Description:
  * @Author: J.Y.Zhang
@@ -7,16 +12,109 @@ import java.util.*;
  */
 public class util {
     /**
-     *
-     * @param word_list1
+     *  @param word_list1
      * @param word_list2
      */
-    public int get_simliarity(String[] word_list1, String[] word_list2){
+    public static double get_simliarity(List<String> word_list1, List<String> word_list2){
+        List<String> list1 = word_list1;
+        List<String> list2 = word_list2;
 
-        return 0;
+        List<String> words = new ArrayList<String>();
+        words.addAll(list1);
+        words.addAll(list2);
+        words = new ArrayList<String>(new LinkedHashSet<>(words));
+        //System.out.println(words);
+        float[] vector1 = new float[words.size()];
+        float[] vector2 = new float[words.size()];
+        float[] vector3 = new float[words.size()];
+        float[] vector4 = new float[words.size()];
+        for(int i = 0; i < words.size(); i++){
+            for(String word1: word_list1){
+                if(words.get(i) == word1){
+                    vector1[i] += 1;
+                }
+            }
+        }
+
+        for(int i = 0; i < words.size(); i++){
+            for(String word2: word_list2){
+                if(words.get(i) == word2){
+                    vector2[i] += 1;
+                }
+            }
+        }
+        //System.out.println(vector1);
+
+        //vector3 = [vector1[x]*vector2[x]  for x in xrange(len(vector1))]
+        for(int x = 0; x < vector1.length; x++){
+            vector3[x] = vector1[x]*vector2[x];
+        }
+        //vector4 = [1 for num in vector3 if num > 0.]
+        for(int x = 0; x < vector3.length; x++){
+            if(vector3[x] > 0.){
+                vector4[x] = 1;
+            }
+        }
+        //co_occur_num = sum(vector4)
+        float co_occur_num = 0;
+        for (int i = 0; i < vector4.length; i++) {
+            co_occur_num = co_occur_num + vector4[i];
+        }
+        if (abs(co_occur_num) <= 1e-12 ){
+            return 0.;
+        }
+
+        float size1 = (float) word_list1.size();
+        float size2 = (float) word_list2.size();
+        double denominator = Math.log( size1 ) + Math.log( size2 );
+        if( abs(denominator) <= 1e-12 ){
+            return  0.;
+        }
+        
+        return co_occur_num / denominator;
     }
 
-    public void sort_sentences(){
+    /**
+     *  @param sentences   列表，元素是句子
+     * @param words       二维列表，子列表和sentences中的句子对应，子列表由单词组成
+     */
+    public static Map<String, String> sort_sentences(String[] sentences, List<List<String>> words){
+
+        int sentences_num = sentences.length;
+        double[][] graph = new double[sentences_num][sentences_num]; // 默认初始值是0
+        for(int i = 0; i < sentences_num; i++){
+            for(int j = i; j < sentences_num; j++){
+                double similarity = get_simliarity( words.get(i), words.get(j) );
+                //System.out.println(similarity);
+                graph[i][j] = similarity;
+                graph[j][i] = similarity;
+            }
+        }
+
+        double damp = 0.85;
+        double[][] link = graph;
+        double[] pr = CaculatePR.pagerank2(graph,damp,10);
+        //System.out.println(pr[0]);
+
+        Map<String, String> map = new TreeMap<String, String>(
+                new Comparator<String>() {
+                    public int compare(String obj1, String obj2) {
+                        // 降序排序
+                        return obj2.compareTo(obj1);
+                    }
+                });
+        for (int i = 0; i < link.length; i++) {
+            map.put(""+pr[i], sentences[i]);
+
+        }
+        Set<String> keySet = map.keySet();
+        Iterator<String> iter = keySet.iterator();
+        while (iter.hasNext()) {
+            String key = iter.next();
+            //System.out.println(key + ":" + map.get(key));
+            //System.out.println(index_word.get(Integer.parseInt(map.get(key)) ));
+        }
+        return map;
 
     }
 
@@ -59,7 +157,7 @@ public class util {
         int words_number = 0;
         for(List<String> word_list: vertex_source){
             for(String word: word_list){
-                System.out.println(word);
+
                 boolean contains = word_index.containsKey(word);    //判断是否包含指定的键值
                 if(contains == false){
                     //System.out.println("这个单词不在字典里");
@@ -73,15 +171,7 @@ public class util {
         }
 
         //Matrix graph = DenseMatrix.Factory.zeros(words_number, words_number);
-        int[][] graph = new int[words_number][words_number];
-        for (int[] column: graph){
-            for(int position: column){
-                position = 0;
-            }
-        }
-
-
-
+        double[][] graph = new double[words_number][words_number];
         for(List<String> word_list: vertex_source){
 
             List<String[]> combineResult;
@@ -107,49 +197,8 @@ public class util {
          */
         // 定义阻尼系数
         double damp = 0.85;
-        CaculatePR c = new CaculatePR();
-        /* 测试数据，表示四个网页相互之间的有向链接矩阵
-         * 用矩阵形式表示
-         *    A  B  C  D
-         * A  0  1  1  0
-         * B  0  0  1  0
-         * C  1  1  0  0
-         * D  0  1  1  0
-         * */
-
-        int[][] link = graph;
-        for(int[] xx: link){
-            for (int x : xx){
-                //System.out.println(x);
-            }
-        }
-// 各点的总链出数量
-        int[] linkOut = new int[link.length];
-        for (i = 0; i < link.length; i++) {
-            for (int j = 0; j < link.length; j++) {
-                linkOut[i] += link[i][j];
-            }
-        }
-//定义一个初始数组并初始化，设所有的页面初始PR值都为1；
-        double[] pr = new double[link.length];
-
-        double[] init = new double[link.length];
-        for (i = 0; i < link.length; i++) {
-            init[i] = 1.0;
-
-        }
-        pr = c.pagerank(link, damp, linkOut, init);
-
-//我们进行10次迭代计算pagerank的值
-        for(i=0;i<10;i++){
-            System.arraycopy(pr, 0, init, 0, link.length);
-            pr = c.pagerank(link, damp, linkOut, pr);
-        }
-
-        for (i = 0; i < link.length; i++) {
-            //System.out.println("PR(" + i + ") = " + pr[i]+ index_word.get(i));
-
-        }
+        double[][] link = graph;
+        double[] pr = CaculatePR.pagerank2(graph,damp,10);
 
         Map<String, String> map = new TreeMap<String, String>(
                 new Comparator<String>() {
@@ -166,7 +215,7 @@ public class util {
         Iterator<String> iter = keySet.iterator();
         while (iter.hasNext()) {
             String key = iter.next();
-            //System.out.println(key + ":" + map.get(key));
+            System.out.println(key + ":" + map.get(key));
             //System.out.println(index_word.get(Integer.parseInt(map.get(key)) ));
         }
         return map;

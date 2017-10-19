@@ -14,7 +14,7 @@ public class CaculatePR {
      * @param init 上次迭代的结果
      *
      * */
-    public static double[] pagerank(int[][] link, double damp, int[] linkout,
+    public static double[] pagerank(double[][] link, double damp, int[] linkout,
                                     double[] init) {
 
         double[] pr = new double[init.length];
@@ -30,6 +30,37 @@ public class CaculatePR {
             pr[i] = damp + (1 - damp) * num;
         }
         return pr;
+    }
+
+    public static double[] pagerank2(double[][] link, double damp, int cishu){
+
+        int[] linkOut = new int[link.length];
+        for (int i = 0; i < link.length; i++) {
+            for (int j = 0; j < link.length; j++) {
+                if(link[i][j] != 0){
+                    linkOut[i] +=1;
+                }
+                //linkOut[i] += link[i][j];
+            }
+        }
+
+        //定义一个初始数组并初始化，设所有的页面初始PR值都为1；
+        double[] pr = new double[link.length];
+
+        double[] init = new double[link.length];
+        for (int i = 0; i < link.length; i++) {
+            init[i] = 1.0;
+        }
+        pr = pagerank(link, damp, linkOut, init);
+
+        //我们进行10次迭代计算pagerank的值
+        for(int i=0;i<10;i++){
+            System.arraycopy(pr, 0, init, 0, link.length);
+            pr = pagerank(link, damp, linkOut, pr);
+        }
+
+        return pr;
+
     }
 }
 

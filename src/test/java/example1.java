@@ -17,6 +17,7 @@ public class example1 {
         //logger.info(readResult);
 
         //关键词
+
         TextRank4Keyword tr4k = new TextRank4Keyword();
         tr4k.analyse(readResult, 2);
         keyWords = tr4k.get_keywords(16,1);
@@ -27,6 +28,14 @@ public class example1 {
         }
 
         //摘要
+        TextRank4Sentence tr4s = new TextRank4Sentence();
+        tr4s.analyse(readResult, 2);
+        keyWords = tr4s.get_keysentences(3,15);
+        logger.info("摘要：");
+        for (String  key : keyWords.keySet()) {
+            String value = keyWords.get(key);
+            logger.info("Key = " + key + "Value = " + value);
+        }
 
     }
 }

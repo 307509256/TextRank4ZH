@@ -22,7 +22,7 @@ public class CaculatePRtest {
          * D  0  1  1  0
          * */
 
-        int[][] link = {
+        double[][] link = {
                 { 0, 1, 1, 0 },
                 { 0, 0, 1, 0 },
                 { 1, 1, 0, 0 },
