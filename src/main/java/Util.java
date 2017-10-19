@@ -10,9 +10,10 @@ import static java.lang.System.out;
  * @Author: J.Y.Zhang
  * @Date: 2017/10/15
  */
-public class util {
+public class Util {
     /**
-     *  @param word_list1
+     * 计算两个句子的相似性
+     * @param word_list1
      * @param word_list2
      */
     public static double get_simliarity(List<String> word_list1, List<String> word_list2){
@@ -75,8 +76,10 @@ public class util {
     }
 
     /**
-     *  @param sentences   列表，元素是句子
+     * 句子排序
+     * @param sentences   列表，元素是句子
      * @param words       二维列表，子列表和sentences中的句子对应，子列表由单词组成
+     * @return map <句子，权重>
      */
     public static Map<String, String> sort_sentences(String[] sentences, List<List<String>> words){
 
@@ -119,14 +122,14 @@ public class util {
     }
 
     /**
-     *
+     * 构造在window下的单词组合，用来构造单词之间的边。
      * @param word_list
      * @param window
      * @return
      */
 
     public static List<String[]> combine(List<String> word_list, int window){
-        /*构造在window下的单词组合，用来构造单词之间的边。*/
+
         if(window < 2){
             window = 2;
         }
@@ -143,13 +146,12 @@ public class util {
 
 
     /**
-     *
+     * 关键词排序
      * @param vertex_source
      * @param edge_source
      * @param i
      * @return
      */
-
     public static Map<String, String> sort_words(List<List<String>> vertex_source, List<List<String>> edge_source, int i) {
         String[] sort_words = {};
         Map word_index = new HashMap();
@@ -193,7 +195,7 @@ public class util {
             //System.out.println(word_index);
         }
         /**
-         * 22222
+         * 计算pr值
          */
         // 定义阻尼系数
         double damp = 0.85;
@@ -215,7 +217,7 @@ public class util {
         Iterator<String> iter = keySet.iterator();
         while (iter.hasNext()) {
             String key = iter.next();
-            System.out.println(key + ":" + map.get(key));
+            //System.out.println(key + ":" + map.get(key));
             //System.out.println(index_word.get(Integer.parseInt(map.get(key)) ));
         }
         return map;

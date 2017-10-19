@@ -8,8 +8,8 @@ import java.util.*;
  * @Date: 2017/10/19
  */
 public class TextRank4Sentence {
+    // 日志
     private Logger logger = Logger.getLogger(TextRank4Keyword.class);
-    private String text;
 
     private int window = 2;
 
@@ -20,15 +20,21 @@ public class TextRank4Sentence {
     private String stop_words_file; // 指定停止词文件路径（一行一个停止词），若为其他类型，则使用默认停止词文件
     private String[] delimiters; // 符号 用来把文本拆成句子
 
-
+    // 关键句子
     private Map<String, String> keysentences;
 
+    // 分词器 重复了！
     private Segmentation seg  = new Segmentation();
 
     public TextRank4Sentence(){
-
+        // 估计应该在这里初始化上面定义那些个参数 暂时还没用到
     }
 
+    /**
+     * 分析 核心是分析出句子按权重排序
+     * @param text
+     * @param window
+     */
     public void analyse(String text,int window) {
         //System.out.println(text+ window);
         logger.info("analyse");
@@ -37,9 +43,15 @@ public class TextRank4Sentence {
         List<List<String>> resultWords = seg.getResultText();
         String[] resultSentences = seg.getResultSentences();
 
-        keysentences = util.sort_sentences(resultSentences,resultWords);
+        keysentences = Util.sort_sentences(resultSentences,resultWords);
     };
 
+    /**
+     *
+     * @param num
+     * @param word_min_len
+     * @return 返回句子摘要列表 map<句子，权重>
+     */
     public Map<String,String> get_keysentences(int num, int word_min_len) {
         Map<String, String> result = new HashMap();
 

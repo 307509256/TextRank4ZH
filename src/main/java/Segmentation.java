@@ -16,59 +16,82 @@ import java.util.regex.Pattern;
  * @Date: 2017/10/15
  */
 public class Segmentation {
+
+    // 加载日志组件
     private static Logger logger = Logger.getLogger(Segmentation.class);
+
+    // 分词二级列表 第一级元素以句子为单位划分 第二级是句子分词结果
     private List<List<String>> resultText;
+
+    // 分句结果列表 元素是句子字符串
     private String[] resultSentences;
+
+    // 单词小写 是否用停止词 是否过滤词性（暂时都没用）
     private boolean lower = true, use_stop_words = true, use_speech_tags_filter = true;
 
-    public Segmentation() {
-
-    }
-
+    /**
+     * 返回分词结果
+     * @return
+     */
     public List<List<String>> getResultText() {
         return resultText;
     }
 
+    /**
+     * 返回分句结果
+     * @return
+     */
     public String[] getResultSentences() {
         return resultSentences;
     }
 
+    /**
+     * 分词函数入口
+     * @param text 读取文件得到的字符串流
+     * @return
+     */
     public List<List<String>> segment(String text){
-        /** 对一段文本进行分词，返回list类型的分词结果
-        Keyword arguments:
-        lower                  -- 是否将单词小写（针对英文）
-        use_stop_words         -- 若为True，则利用停止词集合来过滤（去掉停止词）
-        use_speech_tags_filter -- 是否基于词性进行过滤。若为True，则使用self.default_speech_tag_filter过滤。否则，不过滤。
-        */
-        String[] result = new String[] {"ss", "sss"};
-        Result w = BaseAnalysis.parse(text);
+
         String[] sentences = SentenceSegmentation(text);
         List<List<String>> words = WordSegmentation(sentences);
         this.resultText = words;
         return words;
     }
 
+    /**
+     * 分句
+     * @param text 读取文件得到的字符串流
+     * @return
+     */
     public String[] SentenceSegmentation(String text){
-        logger.info("SentenceSeg");
-        /* 去除换行符 空格 制表符 */
+        //logger.info("SentenceSeg");
+        // 去除换行符 空格 制表符
         text =text.replaceAll("\\s*", "");
-        /*正则表达式：句子结束符*/
-        String regEx="：|。|！|；|，|、 |! |; |？ |…… |… |、 |。|，";
-        //['?', '!', ';', '？', '！', '。', '；', '……', '…', '\n']
-        Pattern p = Pattern.compile(regEx);
-        Matcher m = p.matcher(text);
+
+        // 正则表达式：句子结束符 分句
+
+        String regEx="[; ；。？！?.!]";
+        Pattern p =Pattern.compile(regEx);
+
+        // 按照句子结束符分割句子
         String[] sentences = p.split(text);
-        /*
+
+        // 去除其余标点
         for( int i = 0; i < sentences.length; i++){
-            logger.info(sentences[i]);
+            sentences[i] = sentences[i].replaceAll("\\p{P}" , "");
+            //logger.info(sentences[i]);
         }
-        */
         this.resultSentences = sentences;
         return sentences;
     }
 
+    /**
+     * 把句子进一步分词
+     * @param sentences 分好的句子列表
+     * @return
+     */
     public List<List<String>> WordSegmentation(String[] sentences){
-        logger.info("WordSeg");
+        //logger.info("WordSeg");
         //List<List<Term>> listTest = new ArrayList<List<Term>>();
 
         List<List<String>> sentenceWordsList = new ArrayList<List<String>>();
@@ -92,8 +115,5 @@ public class Segmentation {
         }
         //logger.info(listTest);
         return sentenceWordsList;
-
-
-
     }
 }

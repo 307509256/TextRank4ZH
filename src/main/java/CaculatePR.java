@@ -9,7 +9,7 @@ public class CaculatePR {
     /**
      * 计算pagerank的函数
      * @param link 页面的链接图
-     * @param damp 设置的阻尼系数，佩奇设的是0.85
+     * @param damp 设置的阻尼系数，设的是0.85
      * @param linkout 每个页面的链接总数
      * @param init 上次迭代的结果
      *

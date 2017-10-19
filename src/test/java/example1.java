@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class example1 {
     public static void main(String[] args) {
-        Logger logger = Logger.getLogger(loggerTest.class);
+        Logger logger = Logger.getLogger(example1.class);
         String fileName = "src/test/doc/01.txt";
         Map<String, String> keyWords;
         String readResult;
@@ -30,7 +30,7 @@ public class example1 {
         //摘要
         TextRank4Sentence tr4s = new TextRank4Sentence();
         tr4s.analyse(readResult, 2);
-        keyWords = tr4s.get_keysentences(3,15);
+        keyWords = tr4s.get_keysentences(3,6);
         logger.info("摘要：");
         for (String  key : keyWords.keySet()) {
             String value = keyWords.get(key);
