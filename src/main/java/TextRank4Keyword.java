@@ -1,8 +1,6 @@
-import org.ansj.domain.Result;
-import org.ansj.domain.Term;
 import org.apache.log4j.Logger;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * @Description:
@@ -22,7 +20,7 @@ public class TextRank4Keyword {
 
     private String stop_words_file; // 指定停止词文件路径（一行一个停止词），若为其他类型，则使用默认停止词文件
     private String[] delimiters; // 符号 用来把文本拆成句子
-    private String[] keywords;
+    private Map<String, String> keywords;
 
     private Segmentation seg  = new Segmentation();
 
@@ -56,20 +54,35 @@ public class TextRank4Keyword {
 
         keywords = util.sort_words(vertex_source, edge_source, window);
 
-
-
     };
 
     /**
      *
-     * @param num
-     * @param word_min_len
-     * @return
+     * @param num 返回关键词列表的长度
+     * @param word_min_len 单词的长度大于 word_min_len
+     * @return 关键词列表
      */
-    public String[] get_keywords(int num, int word_min_len){
-        String[] result;
+    public Map<String, String> get_keywords(int num, int word_min_len){
+        Map<String, String> result = new HashMap();
+
         int count = 0;
 
-        return keywords;
+        Set<String> keySet = keywords.keySet();
+
+        Iterator<String> iter = keySet.iterator();
+        while (iter.hasNext()) {
+            if(count >= num){
+                break;
+            }
+            String key = iter.next();
+            System.out.println(key + ":" + keywords.get(key));
+            String word = keywords.get(key);
+            if(word.length()>word_min_len){
+                result.put(word,key);
+                count++;
+            }
+            //System.out.println(keywords.get(keywords.get(key)));
+        }
+        return result;
     }
 }

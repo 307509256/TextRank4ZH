@@ -25,14 +25,27 @@ public class Segmentation {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public List<List<String>> getResultText() {
         return resultText;
     }
 
+    /**
+     *
+     * @return
+     */
     public String[] getResultSentences() {
         return resultSentences;
     }
 
+    /**
+     *
+     * @param text
+     * @return
+     */
     public List<List<String>> segment(String text){
         /** 对一段文本进行分词，返回list类型的分词结果
         Keyword arguments:
@@ -48,6 +61,11 @@ public class Segmentation {
         return words;
     }
 
+    /**
+     *
+     * @param text
+     * @return
+     */
     public String[] SentenceSegmentation(String text){
         logger.info("SentenceSeg");
         /* 去除换行符 空格 制表符 */
@@ -67,6 +85,11 @@ public class Segmentation {
         return sentences;
     }
 
+    /**
+     *
+     * @param sentences
+     * @return
+     */
     public List<List<String>> WordSegmentation(String[] sentences){
         logger.info("WordSeg");
         //List<List<Term>> listTest = new ArrayList<List<Term>>();

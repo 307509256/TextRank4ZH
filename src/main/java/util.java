@@ -1,6 +1,3 @@
-import org.ujmp.core.DenseMatrix;
-import org.ujmp.core.Matrix;
-
 import java.util.*;
 
 /**
@@ -23,6 +20,13 @@ public class util {
 
     }
 
+    /**
+     *
+     * @param word_list
+     * @param window
+     * @return
+     */
+
     public static List<String[]> combine(List<String> word_list, int window){
         /*构造在window下的单词组合，用来构造单词之间的边。*/
         if(window < 2){
@@ -40,9 +44,15 @@ public class util {
     }
 
 
+    /**
+     *
+     * @param vertex_source
+     * @param edge_source
+     * @param i
+     * @return
+     */
 
-
-    public static String[] sort_words(List<List<String>> vertex_source, List<List<String>> edge_source, int i) {
+    public static Map<String, String> sort_words(List<List<String>> vertex_source, List<List<String>> edge_source, int i) {
         String[] sort_words = {};
         Map word_index = new HashMap();
         Map index_word = new HashMap();
@@ -84,7 +94,7 @@ public class util {
                 if(word_index.containsKey(w1) && word_index.containsKey(w2) ){
                     int index1 = (int) word_index.get(w1);
                     int index2 = (int) word_index.get(w2);
-                    System.out.println(index1+w1);
+                    //System.out.println(index1+w1);
                     graph[index1][index2] = 1;
                     graph[index2][index1] = 1;
                 }
@@ -110,7 +120,7 @@ public class util {
         int[][] link = graph;
         for(int[] xx: link){
             for (int x : xx){
-                System.out.println(x);
+                //System.out.println(x);
             }
         }
 // 各点的总链出数量
@@ -137,7 +147,7 @@ public class util {
         }
 
         for (i = 0; i < link.length; i++) {
-            System.out.println("PR(" + i + ") = " + pr[i]+ index_word.get(i));
+            //System.out.println("PR(" + i + ") = " + pr[i]+ index_word.get(i));
 
         }
 
@@ -149,17 +159,16 @@ public class util {
                     }
                 });
         for (i = 0; i < link.length; i++) {
-            map.put(""+pr[i],""+i);
+            map.put(""+pr[i], (String) index_word.get(i));
 
         }
         Set<String> keySet = map.keySet();
         Iterator<String> iter = keySet.iterator();
         while (iter.hasNext()) {
             String key = iter.next();
-            System.out.println(key + ":" + map.get(key));
-            System.out.println(index_word.get(Integer.parseInt(map.get(key)) ));
-
+            //System.out.println(key + ":" + map.get(key));
+            //System.out.println(index_word.get(Integer.parseInt(map.get(key)) ));
         }
-        return sort_words;
+        return map;
     }
 }
